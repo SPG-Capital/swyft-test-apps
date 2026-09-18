@@ -24,9 +24,11 @@ Build a **full-stack web application** that allows finance brokers to:
 
 ### Tech Stack Requirements
 
-- **Frontend**: Next.js (React)
-- **Backend/Database**: Supabase
-- **Authentication**: Google OAuth (via Supabase Auth)
+- **Frontend**: Next.js (React) with TypeScript
+- **Database**: Cloud SQL for PostgreSQL
+- **Authentication**: Google OAuth via Google Identity Platform
+- **File Storage**: Cloud Storage (for lender logos)
+- **Hosting**: Google Cloud — a project is provisioned for you
 
 ---
 
@@ -226,7 +228,7 @@ Customer Rate = Rate on NAF that produces the calculated PMT
 ## Application Requirements
 
 ### Authentication
-- [ ] Google OAuth login via Supabase Auth
+- [ ] Google OAuth login via Google Identity Platform
 - [ ] Protected routes - only authenticated users can access the calculator
 - [ ] User-specific lender configurations (each user has their own lenders)
 
@@ -372,13 +374,13 @@ Some lenders match the broker's origination fee dollar-for-dollar up to a cap:
 - [ ] Preset lender choices with fee signatures pre-configured
 - [ ] Allow users to add custom lenders/fee signatures
 - [ ] Edit and delete custom lenders
-- [ ] Store lender configurations per user in Supabase
+- [ ] Store lender configurations per user in Cloud SQL
 
 ## Technical Requirements
 
 ### Must Have
 - [ ] Next.js application with proper routing
-- [ ] Supabase integration for database and authentication
+- [ ] Cloud SQL (PostgreSQL) and Google Identity Platform integration
 - [ ] Google OAuth working correctly
 - [ ] **Row Level Security (RLS) policies** for all database tables
 - [ ] **Security framework** - proper authentication checks, input sanitization
@@ -454,33 +456,27 @@ When opening a deal, users should see all quotes made for that deal and be able 
 ## Submission Requirements
 
 ### Deployment
-- [ ] **Free Vercel deployment** - Application must be deployed and accessible
-- [ ] **Supabase free tier** - Use Supabase for database and auth (Edge Functions are free)
+- [ ] Deployed to the **Google Cloud** project provisioned for you - application must be accessible
+- [ ] **Cloud SQL for PostgreSQL** for the database, **Cloud Storage** for lender logos
 - [ ] Provide the live URL in your submission
 
+**Code due Mon 28 Sep, 11:59 pm IST.**
+
 ### Video Explanation (Required)
-You must submit a **~30 minute video** covering:
+A **10-minute video**, face on camera, walking through your code and the decisions behind it. Due **Wed 30 Sep, 11:59 pm IST**.
 
-1. **Schema Design** (~10 mins)
-   - Walk through your database schema
-   - Explain your design decisions and trade-offs
-   - How you structured deals, quotes, fee signatures
+Cover:
 
-2. **Application Architecture** (~10 mins)
-   - How you structured the codebase
-   - Key design patterns used
-   - How you approached the calculation engine
-
-3. **Security & Testing** (~10 mins)
-   - RLS policies implemented
-   - Authentication flow
-   - Testing approach - Did you write E2E tests? Unit tests?
-   - How you validated calculation accuracy
+- **Schema design** - how you structured deals, quotes and fee signatures, and the trade-offs you made
+- **Application architecture** - how you structured the codebase, key design patterns, how you approached the calculation engine
+- **Security** - RLS policies implemented, authentication flow
+- **Testing** - E2E tests? Unit tests? How you validated calculation accuracy
 
 ### Code Repository
 - [ ] Private GitHub repository
-- [ ] Add `SauraPG72` as a collaborator
-- [ ] Include README with setup instructions
+- [ ] Add `SauraPG72` and `s2dmad` as collaborators
+- [ ] Tests
+- [ ] README covering setup instructions, architecture decisions and known limitations
 
 ## Resources Provided
 
@@ -840,8 +836,8 @@ Your calculator passes validation when:
 
 ## Getting Started
 
-1. Set up a Supabase project and configure Google OAuth
-2. Create a Storage bucket for lender logos
+1. Set up Cloud SQL and Google Identity Platform on your provisioned Google Cloud project
+2. Create a Cloud Storage bucket for lender logos
 3. Study the reference calculators in `resources/`
 4. Start with the traditional capitalised model (simplest)
 5. Add authentication and user-specific lender storage
@@ -851,11 +847,7 @@ Your calculator passes validation when:
 
 ## Evaluation Criteria
 
-1. **Functionality**: Does the calculator produce correct results?
-2. **Code Quality**: Is the code well-organized and maintainable?
-3. **UX/UI**: Is the application intuitive and easy to use?
-4. **Authentication**: Is the auth flow secure and properly implemented?
-5. **Database Design**: Is the schema well-designed for the use case?
+See the weighted criteria in the [root README](../README.md#evaluation-criteria).
 
 ## Questions to Consider
 

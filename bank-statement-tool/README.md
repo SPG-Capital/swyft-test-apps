@@ -26,10 +26,11 @@ Build a **full-stack web application** that functions as both a **document viewe
 
 ### Tech Stack Requirements
 
-- **Frontend**: Next.js (React)
-- **Backend/Database**: Supabase
-- **Authentication**: Google OAuth (via Supabase Auth)
-- **File Storage**: Supabase Storage (for uploaded statements)
+- **Frontend**: Next.js (React) with TypeScript
+- **Database**: Cloud SQL for PostgreSQL
+- **Authentication**: Google OAuth via Google Identity Platform
+- **File Storage**: Cloud Storage (for uploaded statements)
+- **Hosting**: Google Cloud — a project is provisioned for you
 
 ---
 
@@ -68,7 +69,7 @@ Note: Assessments are always editable - status indicates progress, not a lock.
 
 ### 1. Authentication & Team Collaboration
 
-- [ ] Google OAuth login via Supabase Auth
+- [ ] Google OAuth login via Google Identity Platform
 - [ ] Protected routes - only authenticated users can access the tool
 - [ ] **Team collaboration** - multiple brokers can work on the same deal
 - [ ] User can see all deals they have access to
@@ -86,7 +87,7 @@ Note: Assessments are always editable - status indicates progress, not a lock.
 - [ ] Support multiple file uploads per deal
 - [ ] **Validation**: Only accept files matching the sample formats provided (hardcoded validation)
 - [ ] Reject files that don't match illion format with clear error message
-- [ ] Store original file in Supabase Storage for reference
+- [ ] Store original file in Cloud Storage for reference
 - [ ] Show parsing progress/status for large files
 
 **Data Extraction:**
@@ -270,7 +271,7 @@ You are responsible for designing your own database schema. We intentionally do 
 ### Must Have
 
 - [ ] Next.js application with proper routing
-- [ ] Supabase integration for database, authentication, and file storage
+- [ ] Cloud SQL (PostgreSQL), Google Identity Platform and Cloud Storage integration
 - [ ] Google OAuth working correctly
 - [ ] **HTML and JSON parsing** - extract transactions from both formats
 - [ ] **Format validation** - reject non-illion files with clear error
@@ -411,37 +412,29 @@ Your tool passes validation when a broker can:
 
 ### Deployment
 
-- [ ] **Free Vercel deployment** - Application must be deployed and accessible
-- [ ] **Supabase free tier** - Use Supabase for database, auth, and storage
+- [ ] Deployed to the **Google Cloud** project provisioned for you - application must be accessible
+- [ ] **Cloud SQL for PostgreSQL** for the database, **Cloud Storage** for uploaded statements
 - [ ] Provide the live URL in your submission
+
+**Code due Mon 28 Sep, 11:59 pm IST.**
 
 ### Video Explanation (Required)
 
-You must submit a **~30 minute video** covering:
+A **10-minute video**, face on camera, walking through your code and the decisions behind it. Due **Wed 30 Sep, 11:59 pm IST**.
 
-1. **Schema Design** (~10 mins)
-   - Walk through your database schema
-   - Explain your design decisions and trade-offs
-   - How you structured deals, statements, transactions, annotations
-   - How you handle team collaboration/sharing
+Cover:
 
-2. **Application Architecture** (~10 mins)
-   - How you structured the codebase
-   - Key design patterns used
-   - How you approached HTML/JSON parsing
-   - How you handle the categorisation override system
-
-3. **Security & Testing** (~10 mins)
-   - RLS policies implemented
-   - Authentication and authorisation flow
-   - Testing approach - E2E tests? Unit tests?
-   - How you validated parsing accuracy
+- **Schema design** - how you structured deals, statements, transactions and annotations, how you handle team collaboration/sharing, and the trade-offs you made
+- **Application architecture** - how you structured the codebase, key design patterns, how you approached HTML/JSON parsing and the categorisation override system
+- **Security** - RLS policies implemented, authentication and authorisation flow
+- **Testing** - E2E tests? Unit tests? How you validated parsing accuracy
 
 ### Code Repository
 
 - [ ] Private GitHub repository
-- [ ] Add `SauraPG72` as a collaborator
-- [ ] Include README with setup instructions
+- [ ] Add `SauraPG72` and `s2dmad` as collaborators
+- [ ] Tests
+- [ ] README covering setup instructions, architecture decisions and known limitations
 
 ---
 
@@ -511,8 +504,8 @@ The following demonstrate the kind of analysis the tool should facilitate:
 
 ## Getting Started
 
-1. Set up a Supabase project and configure Google OAuth
-2. Create Storage buckets for uploaded statements
+1. Set up Cloud SQL and Google Identity Platform on your provisioned Google Cloud project
+2. Create a Cloud Storage bucket for uploaded statements
 3. Review sample data structure in `resources/statements/`
 4. Build the HTML/JSON parser first - validate against sample files
 5. Build the transaction display and side-by-side view
