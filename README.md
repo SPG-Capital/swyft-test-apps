@@ -53,8 +53,8 @@ All deadlines are **11:59 pm India Standard Time (IST)** on the date shown. Thes
 
 | Milestone | Date |
 |-----------|------|
-| Invitations sent | Fri 25 Sep |
-| **Code due** | **Mon 28 Sep**, 11:59 pm IST |
+| Invitations sent | Sat 26 Sep |
+| **Code due** | **Tue 29 Sep**, 11:59 pm IST |
 | **Video due** | **Wed 30 Sep**, 11:59 pm IST |
 | You hear back by | Fri 9 Oct |
 

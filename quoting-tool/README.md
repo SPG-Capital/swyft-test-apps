@@ -460,7 +460,7 @@ When opening a deal, users should see all quotes made for that deal and be able 
 - [ ] **Cloud SQL for PostgreSQL** for the database, **Cloud Storage** for lender logos
 - [ ] Provide the live URL in your submission
 
-**Code due Mon 28 Sep, 11:59 pm IST.**
+**Code due Tue 29 Sep, 11:59 pm IST.**
 
 ### Video Explanation (Required)
 A **10-minute video**, face on camera, walking through your code and the decisions behind it. Due **Wed 30 Sep, 11:59 pm IST**.
