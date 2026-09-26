@@ -16,7 +16,7 @@ Currently, brokers either:
 
 ## Your Task
 
-Build a **full-stack web application** that allows finance brokers to:
+Build an **Electron desktop app** (Windows or macOS), backed by a small cloud API, that allows finance brokers to:
 
 1. Calculate loan quotes for multiple lenders
 2. Manage their own lender configurations
@@ -24,11 +24,14 @@ Build a **full-stack web application** that allows finance brokers to:
 
 ### Tech Stack Requirements
 
-- **Frontend**: Next.js (React) with TypeScript
+- **App**: Electron desktop app that runs on Windows or macOS, written in TypeScript with React for the UI
+- **Backend API**: A small API on Google Cloud Run — the app talks only to this, never directly to the database or storage
 - **Database**: Cloud SQL for PostgreSQL
-- **Authentication**: Google OAuth via Google Identity Platform
-- **File Storage**: Cloud Storage (for lender logos)
-- **Hosting**: Google Cloud — a project is provisioned for you
+- **Sign-in**: Google sign-in via Google Identity Platform, opened in the user's normal web browser
+- **File Storage**: Cloud Storage (for lender logos), accessed through your API
+- **Distribution**: An installer for Windows or macOS (whichever you use), attached to a GitHub Release
+
+See the [root README](../README.md#desktop-app-requirements-both-projects) for the desktop app requirements that apply to both projects.
 
 ---
 
@@ -227,9 +230,9 @@ Customer Rate = Rate on NAF that produces the calculated PMT
 
 ## Application Requirements
 
-### Authentication
-- [ ] Google OAuth login via Google Identity Platform
-- [ ] Protected routes - only authenticated users can access the calculator
+### Sign-in
+- [ ] Google sign-in via Google Identity Platform, opened in the user's normal web browser
+- [ ] Until the user signs in, the app shows only the sign-in screen
 - [ ] User-specific lender configurations (each user has their own lenders)
 
 ### Core Calculator
@@ -312,7 +315,7 @@ Commissions: $ 2,020 (4%) ← Optional (toggle)
 ```
 
 - [ ] Multiple quote options can be stacked under the same Finance Amount/Asset header
-- [ ] "Copy Quote to Clipboard" button that copies HTML-rich text
+- [ ] "Copy Quote to Clipboard" button that copies HTML-rich text using the **system clipboard** (Electron's `clipboard` API, writing both HTML and plain-text versions)
 - [ ] Copied content must paste correctly into email clients with table borders and formatting intact
 - [ ] Respect toggle settings (hide comparison rate, base rate, commissions based on user preferences)
 
@@ -368,40 +371,40 @@ Some lenders match the broker's origination fee dollar-for-dollar up to a cap:
 - [ ] Preset fee signatures for common lenders
 - [ ] User can select fee signature → apply base rate → generate quote
 - [ ] Side-by-side comparison of same deal across different lenders
-- [ ] Ability to create custom fee signatures
+- [ ] Ability to create custom fee signatures *(nice to have)*
 
 ### Lender Management
 - [ ] Preset lender choices with fee signatures pre-configured
-- [ ] Allow users to add custom lenders/fee signatures
-- [ ] Edit and delete custom lenders
-- [ ] Store lender configurations per user in Cloud SQL
+- [ ] Allow users to add custom lenders/fee signatures *(nice to have)*
+- [ ] Edit and delete custom lenders *(nice to have)*
+- [ ] Store lender configurations per user in Cloud SQL (via your API)
 
 ## Technical Requirements
 
 ### Must Have
-- [ ] Next.js application with proper routing
-- [ ] Cloud SQL (PostgreSQL) and Google Identity Platform integration
-- [ ] Google OAuth working correctly
-- [ ] **Row Level Security (RLS) policies** for all database tables
-- [ ] **Security framework** - proper authentication checks, input sanitization
+- [ ] Electron app meeting the [desktop app requirements](../README.md#desktop-app-requirements-both-projects)
+- [ ] Backend API on Cloud Run, with Cloud SQL (PostgreSQL) and Google Identity Platform integration
+- [ ] Google sign-in working correctly from the desktop app
+- [ ] **API checks the signed-in user on every request**, plus **Row Level Security (RLS) policies** for all database tables
+- [ ] Input validation and sanitisation in both the app and the API
 - [ ] Core calculation engine matching specifications above
 - [ ] Support for all 4 commission models
-- [ ] CRUD operations for custom lenders/fee signatures
+- [ ] Preset lender fee signatures (select a lender → apply base rate → get a quote)
 - [ ] Input validation with helpful error messages
-
-### Should Have
-- [ ] **HTML copy/paste quote export** (see Email-Ready Quote Export section)
-- [ ] Responsive design (mobile-friendly)
-- [ ] Side-by-side comparison of multiple lenders
-- [ ] Commission comparison showing broker earnings per lender
-- [ ] Ability to save and retrieve quotes (attached to deals)
 - [ ] Test suite validating against known correct outputs
 
+### Should Have
+- [ ] **HTML copy/paste quote export** using the system clipboard (see Email-Ready Quote Export section)
+- [ ] Side-by-side comparison of multiple lenders
+- [ ] Commission comparison showing broker earnings per lender
+
 ### Nice to Have
+- [ ] Create, edit and delete custom lenders/fee signatures
+- [ ] Ability to save and retrieve quotes (attached to deals)
 - [ ] Amortization schedule generation and display
 - [ ] Target commission calculator (reverse calculate required rate)
 - [ ] Quote history per user
-- [ ] Dark mode support
+- [ ] Dark mode support (following the operating system setting)
 
 ### Amortization Schedule
 The application should be able to generate and display a full amortization schedule showing:
@@ -455,10 +458,10 @@ When opening a deal, users should see all quotes made for that deal and be able 
 
 ## Submission Requirements
 
-### Deployment
-- [ ] Deployed to the **Google Cloud** project provisioned for you - application must be accessible
+### Deployment & Distribution
+- [ ] Backend API deployed to the **Google Cloud** project provisioned for you
 - [ ] **Cloud SQL for PostgreSQL** for the database, **Cloud Storage** for lender logos
-- [ ] Provide the live URL in your submission
+- [ ] A **GitHub Release** with an installer for Windows or macOS — send us the link (installers for both are a nice-to-have)
 
 **Code due Tue 29 Sep, 11:59 pm IST.**
 
@@ -468,15 +471,16 @@ A **10-minute video**, face on camera, walking through your code and the decisio
 Cover:
 
 - **Schema design** - how you structured deals, quotes and fee signatures, and the trade-offs you made
-- **Application architecture** - how you structured the codebase, key design patterns, how you approached the calculation engine
-- **Security** - RLS policies implemented, authentication flow
+- **Application architecture** - how you structured the codebase, how the main process, preload bridge and UI communicate, and how you approached the calculation engine
+- **Security** - how sign-in works, where the session is stored, how your API and RLS policies protect each user's data, and how you kept secrets out of the app
+- **Packaging** - how the app is built into an installer
 - **Testing** - E2E tests? Unit tests? How you validated calculation accuracy
 
 ### Code Repository
 - [ ] Private GitHub repository
 - [ ] Add `SauraPG72` and `s2dmad` as collaborators
 - [ ] Tests
-- [ ] README covering setup instructions, architecture decisions and known limitations
+- [ ] README covering how to run and build the app, architecture decisions, which operating system your installer is for, and known limitations
 
 ## Resources Provided
 
@@ -836,12 +840,12 @@ Your calculator passes validation when:
 
 ## Getting Started
 
-1. Set up Cloud SQL and Google Identity Platform on your provisioned Google Cloud project
-2. Create a Cloud Storage bucket for lender logos
-3. Study the reference calculators in `resources/`
-4. Start with the traditional capitalised model (simplest)
-5. Add authentication and user-specific lender storage
-6. Build the lender management UI
+1. Study the reference calculators in `resources/`
+2. Build the calculation engine as plain TypeScript with tests — start with the traditional capitalised model (simplest)
+3. Set up an Electron app and get it building into an installer early
+4. Set up Cloud SQL, Google Identity Platform and a Cloud Storage bucket for lender logos on your provisioned Google Cloud project
+5. Deploy a small API on Cloud Run and add Google sign-in from the desktop app
+6. Add user-specific lender storage and the lender presets
 7. Add remaining commission models
 8. Validate against provided test cases frequently
 
@@ -854,5 +858,6 @@ See the weighted criteria in the [root README](../README.md#evaluation-criteria)
 - How will you handle floating-point precision (hint: financial libraries)?
 - How will you structure the code to easily add new commission models?
 - How will you validate user inputs before calculation?
-- How will you handle image uploads and storage for lender logos?
+- How will you handle image uploads and storage for lender logos without putting cloud keys in the app?
+- Where should the calculation engine live — in the UI, the main process, or shared code — and why?
 - What happens when a user wants to update a preset lender's fees?
