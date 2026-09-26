@@ -16,21 +16,24 @@ When assessing loan applications, brokers analyse bank statements to understand 
 
 ## Your Task
 
-Build a **full-stack web application** that functions as both a **document viewer** and a **data extraction tool**. Brokers should be able to:
+Build an **Electron desktop app** (Windows or macOS), backed by a small cloud API, that functions as both a **document viewer** and a **data extraction tool**. Brokers should be able to:
 
 1. Upload bank statements (HTML or JSON) and have them parsed into structured data
 2. View and analyse transactions with categorisation overrides
 3. Annotate line items with notes and tags
-4. Track assessment progress and collaborate with team members
+4. Track assessment progress (team collaboration is a nice-to-have)
 5. Generate assessment summaries and export reports
 
 ### Tech Stack Requirements
 
-- **Frontend**: Next.js (React) with TypeScript
+- **App**: Electron desktop app that runs on Windows or macOS, written in TypeScript with React for the UI
+- **Backend API**: A small API on Google Cloud Run — the app talks only to this, never directly to the database or storage
 - **Database**: Cloud SQL for PostgreSQL
-- **Authentication**: Google OAuth via Google Identity Platform
-- **File Storage**: Cloud Storage (for uploaded statements)
-- **Hosting**: Google Cloud — a project is provisioned for you
+- **Sign-in**: Google sign-in via Google Identity Platform, opened in the user's normal web browser
+- **File Storage**: Cloud Storage (for uploaded statements), accessed through your API
+- **Distribution**: An installer for Windows or macOS (whichever you use), attached to a GitHub Release
+
+See the [root README](../README.md#desktop-app-requirements-both-projects) for the desktop app requirements that apply to both projects.
 
 ---
 
@@ -67,13 +70,13 @@ Note: Assessments are always editable - status indicates progress, not a lock.
 
 ## Core Features
 
-### 1. Authentication & Team Collaboration
+### 1. Sign-in & Team Collaboration
 
-- [ ] Google OAuth login via Google Identity Platform
-- [ ] Protected routes - only authenticated users can access the tool
-- [ ] **Team collaboration** - multiple brokers can work on the same deal
+- [ ] Google sign-in via Google Identity Platform, opened in the user's normal web browser
+- [ ] Until the user signs in, the app shows only the sign-in screen
 - [ ] User can see all deals they have access to
-- [ ] Activity tracking (who made what changes)
+- [ ] **Team collaboration** - multiple brokers can work on the same deal *(nice to have)*
+- [ ] Activity tracking (who made what changes) *(nice to have)*
 
 ### 2. File Upload & Parsing
 
@@ -82,12 +85,12 @@ Note: Assessments are always editable - status indicates progress, not a lock.
 - illion JSON exports (`.json` files matching the v2 schema)
 
 **Requirements:**
-- [ ] Drag-and-drop file upload interface
+- [ ] Open statements with the operating system's **file picker** (Electron's `dialog`), and support **dragging files in from Finder or File Explorer**
 - [ ] Parse and extract transaction data into structured database format
 - [ ] Support multiple file uploads per deal
 - [ ] **Validation**: Only accept files matching the sample formats provided (hardcoded validation)
 - [ ] Reject files that don't match illion format with clear error message
-- [ ] Store original file in Cloud Storage for reference
+- [ ] Store original file in Cloud Storage for reference (uploaded through your API — no cloud keys in the app)
 - [ ] Show parsing progress/status for large files
 
 **Data Extraction:**
@@ -200,7 +203,7 @@ The final output should be a structured notes table containing:
 **Export Options:**
 - [ ] **Consumer Summary Export** - formatted for consumer loan applications
 - [ ] **Commercial Summary Export** - formatted for commercial loan applications
-- [ ] Copy to clipboard (for pasting into loan submission systems)
+- [ ] Copy to clipboard using the system clipboard (for pasting into loan submission systems)
 - [ ] PDF export (optional)
 
 **Example Output Structure:**
@@ -260,9 +263,10 @@ You are responsible for designing your own database schema. We intentionally do 
 - **Tag Presets** - saved category configurations
 
 **Security Requirements:**
+- [ ] Your API checks the signed-in user on every request
 - [ ] Row Level Security (RLS) policies for all tables
 - [ ] Users can only access deals they own or are shared with
-- [ ] Team members can view/edit shared deals
+- [ ] Team members can view/edit shared deals (if you build team collaboration)
 
 ---
 
@@ -270,9 +274,9 @@ You are responsible for designing your own database schema. We intentionally do 
 
 ### Must Have
 
-- [ ] Next.js application with proper routing
-- [ ] Cloud SQL (PostgreSQL), Google Identity Platform and Cloud Storage integration
-- [ ] Google OAuth working correctly
+- [ ] Electron app meeting the [desktop app requirements](../README.md#desktop-app-requirements-both-projects)
+- [ ] Backend API on Cloud Run, with Cloud SQL (PostgreSQL), Google Identity Platform and Cloud Storage integration
+- [ ] Google sign-in working correctly from the desktop app
 - [ ] **HTML and JSON parsing** - extract transactions from both formats
 - [ ] **Format validation** - reject non-illion files with clear error
 - [ ] Row Level Security (RLS) policies for all database tables
@@ -283,18 +287,19 @@ You are responsible for designing your own database schema. We intentionally do 
 - [ ] Deal status tracking (uploaded → parsed → checked → completed)
 - [ ] Basic income/expense summary per account
 - [ ] Search and filter functionality
+- [ ] Tests validating parsing against the sample files
 
 ### Should Have
 
-- [ ] **Team collaboration** - share deals with other users
 - [ ] Automatic interbank transfer detection (matching amounts/dates)
 - [ ] Visual linking of related transactions across accounts
 - [ ] Custom tag categories with save/load presets
 - [ ] Export summary for loan applications (Consumer and Commercial formats)
-- [ ] Responsive design for different screen sizes
 - [ ] Bulk tagging (select multiple, apply tag)
 
 ### Nice to Have
+
+- [ ] **Team collaboration** - share deals with other users
 
 - [ ] Trend visualisation (charts/graphs)
 - [ ] Anomaly detection (unusual transactions, gambling patterns)
@@ -386,7 +391,7 @@ The HTML files are illion's visual export format. They contain the same data as 
 4. **Transfer Matching**: Same amount transferred between accounts may have different dates (banking delays), different descriptions
 5. **Category Override**: Maintaining both original and user-applied categories
 6. **Performance**: Statements can have 1000+ transactions; must remain responsive
-7. **Collaboration**: Real-time or near-real-time sync between team members
+7. **Collaboration** *(nice to have)*: Sync between team members
 
 ---
 
@@ -394,7 +399,7 @@ The HTML files are illion's visual export format. They contain the same data as 
 
 Your tool passes validation when a broker can:
 
-1. **Upload & Parse**: Drag-drop an HTML file, see it parsed and displayed within seconds
+1. **Upload & Parse**: Drag an HTML file in from Finder/File Explorer (or open it with the file picker), see it parsed and displayed within seconds
 2. **Multi-Account View**: Open a statement with 4+ accounts and view all side-by-side
 3. **Transfer Detection**: Find a $1,000 transfer between accounts in under 5 seconds
 4. **Tagging**: Tag a transaction (e.g., "Genuine Revenue" or "Gambling") with a single click
@@ -403,20 +408,20 @@ Your tool passes validation when a broker can:
 7. **Mode Toggle**: Switch between Consumer and Commercial analysis modes
 8. **Assessment Status**: Move a deal from "Uploaded" to "Completed" through the workflow
 9. **Export**: Generate a summary showing analysis against the assessment checklist
-10. **Collaboration**: Share a deal with a team member, see their annotations
-11. **Persistence**: Log out, log back in, see all previous work intact
+10. **Persistence**: Sign out, sign back in (or quit and reopen the app), see all previous work intact
+11. **Collaboration** *(nice to have)*: Share a deal with a team member, see their annotations
 
 ---
 
 ## Submission Requirements
 
-### Deployment
+### Deployment & Distribution
 
-- [ ] Deployed to the **Google Cloud** project provisioned for you - application must be accessible
+- [ ] Backend API deployed to the **Google Cloud** project provisioned for you
 - [ ] **Cloud SQL for PostgreSQL** for the database, **Cloud Storage** for uploaded statements
-- [ ] Provide the live URL in your submission
+- [ ] A **GitHub Release** with an installer for Windows or macOS — send us the link (installers for both are a nice-to-have)
 
-**Code due Mon 28 Sep, 11:59 pm IST.**
+**Code due Tue 29 Sep, 11:59 pm IST.**
 
 ### Video Explanation (Required)
 
@@ -424,9 +429,10 @@ A **10-minute video**, face on camera, walking through your code and the decisio
 
 Cover:
 
-- **Schema design** - how you structured deals, statements, transactions and annotations, how you handle team collaboration/sharing, and the trade-offs you made
-- **Application architecture** - how you structured the codebase, key design patterns, how you approached HTML/JSON parsing and the categorisation override system
-- **Security** - RLS policies implemented, authentication and authorisation flow
+- **Schema design** - how you structured deals, statements, transactions and annotations, how you would handle team sharing, and the trade-offs you made
+- **Application architecture** - how you structured the codebase, how the main process, preload bridge and UI communicate, and how you approached HTML/JSON parsing and the categorisation override system
+- **Security** - how sign-in works, where the session is stored, how your API and RLS policies protect each user's data, and how you kept secrets out of the app
+- **Packaging** - how the app is built into an installer
 - **Testing** - E2E tests? Unit tests? How you validated parsing accuracy
 
 ### Code Repository
@@ -434,7 +440,7 @@ Cover:
 - [ ] Private GitHub repository
 - [ ] Add `SauraPG72` and `s2dmad` as collaborators
 - [ ] Tests
-- [ ] README covering setup instructions, architecture decisions and known limitations
+- [ ] README covering how to run and build the app, architecture decisions, which operating system your installer is for, and known limitations
 
 ---
 
@@ -504,16 +510,16 @@ The following demonstrate the kind of analysis the tool should facilitate:
 
 ## Getting Started
 
-1. Set up Cloud SQL and Google Identity Platform on your provisioned Google Cloud project
-2. Create a Cloud Storage bucket for uploaded statements
-3. Review sample data structure in `resources/statements/`
-4. Build the HTML/JSON parser first - validate against sample files
-5. Build the transaction display and side-by-side view
-6. Implement tagging and annotation system
-7. Add deal management and status workflow
-8. Implement team collaboration features
+1. Review sample data structure in `resources/statements/`
+2. Build the HTML/JSON parser first as plain TypeScript with tests - validate against sample files
+3. Set up an Electron app and get it building into an installer early
+4. Set up Cloud SQL, Google Identity Platform and a Cloud Storage bucket on your provisioned Google Cloud project
+5. Deploy a small API on Cloud Run and add Google sign-in from the desktop app
+6. Build the transaction display and side-by-side view
+7. Implement tagging and annotation system
+8. Add deal management and status workflow
 9. Build export functionality
-10. Test with provided sample data
+10. Add team collaboration if time allows
 
 ---
 
@@ -524,6 +530,7 @@ The following demonstrate the kind of analysis the tool should facilitate:
 - How will you handle statements with 10+ accounts visually?
 - What's your matching algorithm for interbank transfers?
 - How will you structure the database to support both tags and annotations efficiently?
-- How will you handle team collaboration and concurrent edits?
+- How would you handle team collaboration and concurrent edits?
+- Should parsing happen in the desktop app or in your API — and why?
 - What summary metrics are most valuable for loan assessment?
 - How will you differentiate Consumer vs Commercial analysis workflows in the UI?
