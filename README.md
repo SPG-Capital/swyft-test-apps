@@ -17,7 +17,7 @@ Choose **ONE** of these two projects:
 
 ## Tech Stack
 
-Both projects use the same stack. A Google Cloud project is provisioned for you.
+Both projects use the same stack. 
 
 - **App:** An **Electron desktop app** that runs on **Windows or macOS**, written in **TypeScript**, with **React** for the UI. Use any build tooling you like (Electron Forge, electron-vite, electron-builder, etc.).
 - **Backend API:** A small API you deploy to **Google Cloud Run**. The desktop app talks **only** to this API — never directly to the database or to storage.
