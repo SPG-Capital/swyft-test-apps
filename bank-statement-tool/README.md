@@ -417,7 +417,7 @@ Your tool passes validation when a broker can:
 
 ### Deployment & Distribution
 
-- [ ] Backend API deployed to the **Google Cloud** project provisioned for you
+- [ ] Backend API deployed to a **Google Cloud** project you create yourself
 - [ ] **Cloud SQL for PostgreSQL** for the database, **Cloud Storage** for uploaded statements
 - [ ] A **GitHub Release** with an installer for Windows or macOS — send us the link (installers for both are a nice-to-have)
 
@@ -513,7 +513,7 @@ The following demonstrate the kind of analysis the tool should facilitate:
 1. Review sample data structure in `resources/statements/`
 2. Build the HTML/JSON parser first as plain TypeScript with tests - validate against sample files
 3. Set up an Electron app and get it building into an installer early
-4. Set up Cloud SQL, Google Identity Platform and a Cloud Storage bucket on your provisioned Google Cloud project
+4. Create your own Google Cloud project, then set up Cloud SQL, Google Identity Platform and a Cloud Storage bucket in it
 5. Deploy a small API on Cloud Run and add Google sign-in from the desktop app
 6. Build the transaction display and side-by-side view
 7. Implement tagging and annotation system

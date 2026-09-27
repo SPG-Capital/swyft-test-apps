@@ -459,7 +459,7 @@ When opening a deal, users should see all quotes made for that deal and be able 
 ## Submission Requirements
 
 ### Deployment & Distribution
-- [ ] Backend API deployed to the **Google Cloud** project provisioned for you
+- [ ] Backend API deployed to a **Google Cloud** project you create yourself
 - [ ] **Cloud SQL for PostgreSQL** for the database, **Cloud Storage** for lender logos
 - [ ] A **GitHub Release** with an installer for Windows or macOS — send us the link (installers for both are a nice-to-have)
 
@@ -843,7 +843,7 @@ Your calculator passes validation when:
 1. Study the reference calculators in `resources/`
 2. Build the calculation engine as plain TypeScript with tests — start with the traditional capitalised model (simplest)
 3. Set up an Electron app and get it building into an installer early
-4. Set up Cloud SQL, Google Identity Platform and a Cloud Storage bucket for lender logos on your provisioned Google Cloud project
+4. Create your own Google Cloud project, then set up Cloud SQL, Google Identity Platform and a Cloud Storage bucket for lender logos in it
 5. Deploy a small API on Cloud Run and add Google sign-in from the desktop app
 6. Add user-specific lender storage and the lender presets
 7. Add remaining commission models

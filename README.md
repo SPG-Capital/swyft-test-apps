@@ -100,7 +100,7 @@ This is a short window — three days — so scope your build accordingly. **A f
 
 1. Push code to a **private** GitHub repository
 2. Add both `SauraPG72` and `s2dmad` as collaborators
-3. Deploy your backend API to your provisioned **Google Cloud** project
+3. Deploy your backend API to a **Google Cloud** project you create yourself
 4. Publish a **GitHub Release** containing your installer (Windows or macOS), and send us the link
 5. Include **tests**
 6. Include a README covering:
